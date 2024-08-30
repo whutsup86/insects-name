@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toggle Animation on Click</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            cursor: url('./net.png'), auto; /* Custom cursor */
+        }
+        #container {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            background-color: #f0f0f0; /* 배경색은 선택 사항 */
+        }
+        .image {
+            position: absolute;
+            width: 100px; /* 이미지의 너비 */
+            height: 100px; /* 이미지의 높이 */
+        }
+        .overlay {
+            position: fixed; /* Fixed position for centering */
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            display: none; /* Initially hidden */
+            text-align: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Center the overlay */
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <div id="overlay" class="overlay"></div>
+
+    <script>
+        const container = document.getElementById('container');
+        const overlay = document.getElementById('overlay');
+        const containerWidth = window.innerWidth;
+        const containerHeight = window.innerHeight;
+        const imageSize = 100; // Image width and height
+    
+        // List of image files with English names
+        const imageFiles = [
+            '1.png',
+            '2.png',
+            '3.png',
+            '4.png',
+            '5.png',
+            '6.png',
+            '7.png',
+            '8.png',
+            '9.png',
+            '10.png',
+            '11.png',
+            '12.png',
+            '13.png',
+            '14.png',
+            '15.png',
+            '16.png',
+            '17.png',
+            '18.png',
+            '19.png',
+            '20.png',
+            '21.png',
+            '22.png',
+            '23.png',
+            '24.png',
+            '25.png',
+            '26.png',
+            '27.png',
+            '28.png',
+            '29.png',
+            '30.png',
+        ];
+    
+        const imageNames = {
+            '1.png' : 'ヘビ',
+            '2.png' : 'オオクワガタ',
+            '3.png' :'ティタノボア',
+            '4.png' :'メスカマキリ',
+            '5.png' :'スズメバチ',
+            '6.png' :'ヘラクレスオオカブト',
+            '7.png' :'サソリ',
+            '8.png' :'ムカデ',
+            '9.png' :'大クワガタ',
+            '10.png' :'オオエンマハンミョウ',
+            '11.png' :'クワガタ',
+            '12.png' :'スマトラオオヒラタクワガタ',
+            '13.png' :'はなカマキリ',
+            '14.png' :'花カマキリ',
+            '15.png' :'ペルビアンジャイアントオオムカデ',
+            '16.png' :'?',
+            '17.png' :'デスストーかー',
+            '18.png' :'サソリ',
+            '19.png' :'はなカマキリ',
+            '20.png' :'クモ',
+            '21.png' :'ミツハチ',
+            '22.png' :'ヘラクレスオオカブト',
+            '23.png' :'ヘラクレスオオカブト',
+            '24.png' :'カブトムシ',
+            '25.png' :'くも',
+            '26.png' :'オオクワガタ',
+            '27.png' :'ギラファノコギリクワガタ',
+            '28.png' :'ギラファノコギリクワガタ',
+            '29.png' :'おおむかで',
+            '30.png' :'オオカマキリ', 
+        };
+    
+        let animationPaused = false; // To toggle animation state
+    
+        // Create and position images
+        const images = imageFiles.map(file => {
+            const img = document.createElement('img');
+            img.src = `./img/${file}`;
+            img.className = 'image';
+            img.style.left = `${Math.random() * (containerWidth - imageSize)}px`;
+            img.style.top = `${Math.random() * (containerHeight - imageSize)}px`;
+    
+            img.addEventListener('click', () => {
+                if (animationPaused) {
+                    // Resume animation and hide the overlay
+                    animationPaused = false;
+                    overlay.style.display = 'none';
+                } else {
+                    // Pause animation and show the filename
+                    animationPaused = true;
+                    const fileName = imageNames[file] || file.replace(/\.[^/.]+$/, ""); // Use English name or original filename
+                    overlay.textContent = `이 곤충의 이름은 : ${fileName}`;
+                    overlay.style.display = 'block';
+                }
+            });
+    
+            container.appendChild(img);
+    
+            return {
+                element: img,
+                dx: (Math.random() - 0.5) * 2, // Random speed between -2 and 2
+                dy: (Math.random() - 0.5) * 2, // Random speed between -2 and 2
+            };
+        });
+    
+        // Animation function
+        function animate() {
+            if (!animationPaused) {
+                images.forEach(image => {
+                    let x = parseFloat(image.element.style.left);
+                    let y = parseFloat(image.element.style.top);
+    
+                    x += image.dx;
+                    y += image.dy;
+    
+                    if (x + imageSize > containerWidth || x < 0) {
+                        image.dx *= -1;  // Reverse horizontal direction
+                    }
+                    if (y + imageSize > containerHeight || y < 0) {
+                        image.dy *= -1;  // Reverse vertical direction
+                    }
+    
+                    image.element.style.left = `${x}px`;
+                    image.element.style.top = `${y}px`;
+                });
+            }
+    
+            requestAnimationFrame(animate);  // Call animate on the next frame
+        }
+    
+        // Start the animation
+        animate();
+    </script>
+    
+</body>
+</html>
+
+
+
